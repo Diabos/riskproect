@@ -110,6 +110,34 @@ Runs at: `http://localhost:3000`
 
 ---
 
+### ⚙️ Configure Frontend to Connect to Backend
+
+**For GitHub Pages (or any remote frontend):**
+
+1. Edit `public/index.html` line 76-78
+2. Uncomment and set your backend URL:
+
+```html
+<script>
+    window.API_BASE = 'https://your-backend-url.com';
+</script>
+```
+
+Examples:
+- Heroku: `window.API_BASE = 'https://your-app-name.herokuapp.com';`
+- Railway: `window.API_BASE = 'https://your-project.railway.app';`
+- Docker VPS: `window.API_BASE = 'https://your-vps-ip:3000';`
+- Local: Leave commented (uses `/api`)
+
+3. Push to GitHub:
+```bash
+git add public/index.html
+git commit -m "Configure backend endpoint"
+git push origin main
+```
+
+---
+
 ## 🚀 Key Features
 
 1. **SSH-Based Execution** - Remotely execute hardening scripts via SSH

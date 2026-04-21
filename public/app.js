@@ -1,5 +1,25 @@
-// API Base URL
-const API_BASE = '/api';
+// API Configuration
+// Change this to your backend URL (e.g., https://your-backend.herokuapp.com)
+const API_BASE = window.API_BASE || '/api';
+
+// Auto-detect backend if deployed to GitHub Pages
+function getApiBase() {
+  if (window.API_BASE) return window.API_BASE;
+  
+  // If running on GitHub Pages, backend must be configured
+  if (window.location.hostname.includes('github.io')) {
+    // For GitHub Pages, you need to set window.API_BASE before this loads
+    // Or point to your backend server
+    console.warn('⚠️ Backend not configured. Set window.API_BASE before loading app.js');
+    console.warn('Example: window.API_BASE = "https://your-backend.herokuapp.com"');
+    return 'http://localhost:3000/api'; // Fallback for testing
+  }
+  
+  // Local development
+  return '/api';
+}
+
+const API = getApiBase();
 
 // DOM Elements
 const executeBtnEl = document.getElementById('execute-btn');
@@ -44,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load dashboard data
 async function loadDashboard() {
     try {
-        const response = await fetch(`${API_BASE}/dashboard`);
+        const response = await fetch(`${API}/dashboard`);
         const data = await response.json();
 
         document.getElementById('total-executions').textContent = data.totalExecutions;
@@ -63,7 +83,7 @@ async function loadDashboard() {
 // Load servers
 async function loadServers() {
     try {
-        const response = await fetch(`${API_BASE}/servers`);
+        const response = await fetch(`${API}/servers`);
         const data = await response.json();
 
         serversListEl.innerHTML = data.servers.map(server => `
@@ -89,7 +109,7 @@ async function loadServers() {
 // Load execution history
 async function loadHistory() {
     try {
-        const response = await fetch(`${API_BASE}/history`);
+        const response = await fetch(`${API}/history`);
         const data = await response.json();
 
         if (data.executions.length === 0) {
@@ -125,7 +145,7 @@ async function executeHardening() {
     logsOutputEl.textContent = 'Starting hardening execution...\n';
 
     try {
-        const response = await fetch(`${API_BASE}/execute`, {
+        const response = await fetch(`${API}/execute`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ serverId: 1 })
@@ -154,7 +174,7 @@ async function executeHardeningForServer(serverId) {
     executeBtnEl.textContent = '⏳ Running...';
 
     try {
-        const response = await fetch(`${API_BASE}/execute`, {
+        const response = await fetch(`${API}/execute`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ serverId })
@@ -178,7 +198,7 @@ async function executeHardeningForServer(serverId) {
 // Show execution details in modal
 async function showExecutionDetails(executionId) {
     try {
-        const response = await fetch(`${API_BASE}/history/${executionId}`);
+        const response = await fetch(`${API}/history/${executionId}`);
         const execution = await response.json();
 
         modalBodyEl.innerHTML = `

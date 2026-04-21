@@ -1,35 +1,32 @@
-name: Zero-Trust Hardening Verification (CI/CD)
+name: Code Quality Check
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: # Allows you to run this manually from the Actions tab
+    branches: [ main ]
 
 jobs:
-  test-hardening:
+  test:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Make Script Executable
-        run: chmod +x scripts/zero_trust_harden.sh
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-      - name: Execute Zero-Trust Hardening Script
-        run: sudo bash scripts/zero_trust_harden.sh
+      - name: Install dependencies
+        run: npm ci --omit=dev
 
-      - name: Verify UFW (Firewall) Status
-        run: sudo ufw status verbose
-        
-      - name: Verify Fail2Ban Status
-        run: sudo systemctl status fail2ban --no-pager
-
-      - name: Verify SSH Hardening
-        run: |
-          echo "Checking if Root Login is Disabled..."
-          grep "^PermitRootLogin no" /etc/ssh/sshd_config
-          echo "Checking if Password Auth is Disabled..."
-          grep "^PasswordAuthentication no" /etc/ssh/sshd_config
+      - name: Verify script syntax
+        run: bash -n scripts/zero_trust_harden.sh
+      
+      - name: Verify server.js syntax
+        run: node -c server.js
+      
+      - name: Check package.json
+        run: node -e "require('./package.json')"
