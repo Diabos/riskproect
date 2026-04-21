@@ -1,0 +1,65 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Docker
+.dockerignore
+
+# n8n
+.n8n/
+n8n-data/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Sensitive Files
+*.pem
+*.key
+*.ppk
+ssh-key*
+private_key*
+
+# Build outputs
+dist/
+build/
+out/
+
+# Test coverage
+coverage/
+.nyc_output/
